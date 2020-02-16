@@ -1,0 +1,8 @@
+# testing
+/coverage
+
+# production
+/release
+
+# db
+/db.sqlite

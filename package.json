@@ -1,0 +1,16 @@
+{
+  "name": "@charta-task/root",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "server-api": "npm run dev --prefix server-api",
+    "client-web": "npm run dev --prefix client-web",
+    "dev": "npx concurrently -k --names \"API,WEB\" -c \"white.bold,magenta.bold\" \"npm run server-api\" \"npm run client-web\"",
+    "lerna:update": "npx lerna bootstrap",
+    "start": "npm run lerna:update && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "lerna": "^3.20.2"
+  }
+}

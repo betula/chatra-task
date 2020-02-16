@@ -1,0 +1,12 @@
+{
+  "db": {
+    "filename": "db.sqlite"
+  },
+  "server": {
+    "hostname": "127.0.0.1",
+    "port": 2020
+  },
+  "steam": {
+    "key": "8738270D3B5D8959A13E1BC255D5702A"
+  }
+}

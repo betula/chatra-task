@@ -1,0 +1,13 @@
+{
+  "version": "0.0.0",
+  "packages": [
+    ".",
+    "*"
+  ],
+  "npmClient": "npm",
+  "hoist": true,
+  "npmClientArgs": [
+    "--no-package-lock"
+  ],
+  "loglevel": "verbose"
+}
