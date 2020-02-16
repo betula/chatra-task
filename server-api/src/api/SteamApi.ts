@@ -12,6 +12,7 @@ export class SteamApi {
 
   private key: string;
   private url = "http://api.steampowered.com";
+
   private cacheVanityUrl = cache.hour();
   private cacheOwnedGames = cache.minute(5);
 

@@ -6,14 +6,19 @@ export const Hour = 60 * Minute;
 
 const DefaultCacheKey = Symbol();
 
+function keyFromKeys(keys: any[]): any {
+  return keys.map(key => `${key}`).join(":");
+}
+
 function create(lifetime: number) {
-  const createdAt: any = {};
-  const cache: any = {};
+  let createdAt: any = {};
+  let cache: any = {};
+
   function fn(fn: () => any): any;
   function fn(...keysAndFnAtLast: any[]): any;
   function fn(...keysAndFnAtLast: any[]) {
     const fn = keysAndFnAtLast.slice(-1)[0];
-    const key = keysAndFnAtLast.slice(0, -1).map(key => `${key}`).join(":") || DefaultCacheKey;
+    const key = keyFromKeys(keysAndFnAtLast.slice(0, -1)) || DefaultCacheKey;
     const now = Date.now();
     if (typeof createdAt[key] === "undefined" || now > createdAt[key] + lifetime) {
       cache[key] = (fn)();
@@ -24,6 +29,18 @@ function create(lifetime: number) {
       ? value.then((data: any) => clone(data))
       : clone(value);
   }
+
+  fn.reset = (...keys: any[]) => {
+    if (keys.length === 0) {
+      createdAt = {};
+      cache = {};
+    } else {
+      const key = keyFromKeys(keys) || DefaultCacheKey;
+      delete createdAt[key];
+      delete cache[key];
+    }
+  };
+
   return fn;
 }
 

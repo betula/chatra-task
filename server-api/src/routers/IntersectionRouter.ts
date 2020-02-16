@@ -21,6 +21,25 @@ export class IntersectionRouter {
       .format(/[0-9]+/)
       .value;
 
+    const [ intersection, multiplayers ] = await Promise.all([
+      this.getGameIntersectionBySteamids(steamids),
+      this.steamSpyApi.getMultiplayerGames()
+    ]);
+
+    const games = [];
+    for (const game of intersection) {
+      if (multiplayers[game.appid]) {
+        games.push(game);
+      }
+    }
+
+    return {
+      games,
+      steamids
+    };
+  }
+
+  private async getGameIntersectionBySteamids(steamids: string[]) {
     const responses = await Promise.all(steamids.map(
       (steamid: string, index: number) => this.steamApi.getOwnedGames(steamid, { info: index === 0 })
     ));
@@ -47,10 +66,8 @@ export class IntersectionRouter {
       }
     });
 
-    return {
-      games: intersection,
-      steamids
-    };
+    return intersection;
   }
+
 
 }

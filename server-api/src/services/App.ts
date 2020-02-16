@@ -4,6 +4,7 @@ import { Server } from "~/services/Server";
 import { IntersectionRouter } from "~/routers/IntersectionRouter";
 import { Config } from "./Config";
 import { PlayerRouter } from "~/routers/PlayerRouter";
+import { SteamSpyApi } from "~/api/SteamSpyApi";
 
 export class App {
   @provide public config: Config;
@@ -11,12 +12,14 @@ export class App {
   @provide public server: Server;
   @provide public intersectionRouter: IntersectionRouter;
   @provide public playerRouter: PlayerRouter;
+  @provide public steamSpyApi: SteamSpyApi;
 
   public start() {
     try {
       this.configure();
       this.init();
       this.run();
+      this.post();
     } catch (error) {
       this.logger.log(error);
     }
@@ -33,5 +36,9 @@ export class App {
 
   private run() {
     this.server.run();
+  }
+
+  private post() {
+    this.steamSpyApi.autoWarmCache();
   }
 }
