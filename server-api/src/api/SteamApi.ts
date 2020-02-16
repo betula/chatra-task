@@ -38,16 +38,16 @@ export class SteamApi {
     }
   }
 
-  public async getOwnedGames(steamid: string) {
+  public async getOwnedGames(steamid: string, options?: any) {
     const query = qs.stringify({
+      ...(options?.info ? { include_appinfo: true } : {}),
       steamid,
       include_played_free_games: true,
-      include_appinfo: true,
       key: this.key,
       format: "json"
     });
     const cmd = "/IPlayerService/GetOwnedGames/v0001/";
-    const logFinish = this.logCall(cmd, steamid);
+    const logFinish = this.logCall(cmd, steamid, (options?.info ? "with-info" : "no-info"));
     const response = await fetch(`${this.url}${cmd}?${query}`);
     const data = (await response.json()).response;
     logFinish();
@@ -56,21 +56,4 @@ export class SteamApi {
       games: data.games
     }
   }
-
-  public async getOwnedGamesByVanityUrl(vanityurl: string) {
-    const dataSteamid = await this.getSteamIdByVanityUrl(vanityurl);
-    if (!dataSteamid.ok) {
-      return {
-        ok: false,
-        message: dataSteamid.message
-      }
-    }
-    const dataGames = await this.getOwnedGames(dataSteamid.steamid);
-    return {
-      ok: true,
-      steamid: dataSteamid.steamid,
-      ...dataGames
-    }
-  }
-
 }

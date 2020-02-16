@@ -51,13 +51,21 @@ export class Param {
     return this;
   }
 
-  public format(regexp: RegExp, transform?: (matches: RegExpExecArray) => any) {
-    const matches = regexp.exec(this.value);
-    if (!matches) {
-      this.error("format");
+  public format(regexp: RegExp, transform?: (match: RegExpExecArray) => any) {
+    const single = (value: any) => {
+      const match = regexp.exec(value);
+      if (!match) {
+        this.error("format");
+      }
+      return (typeof transform !== "undefined")
+        ? transform((match as any) as RegExpExecArray)
+        : value;
     }
-    if (typeof transform !== "undefined") {
-      this.value = transform((matches as any) as RegExpExecArray);
+
+    if (Array.isArray(this.value)) {
+      this.value = this.value.map(single);
+    } else {
+      this.value = single(this.value);
     }
     return this;
   }

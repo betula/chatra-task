@@ -4,6 +4,7 @@ import { Db } from "~/services/Db";
 import { Server } from "~/services/Server";
 import { IntersectionRouter } from "~/routers/IntersectionRouter";
 import { Config } from "./Config";
+import { PlayerRouter } from "~/routers/PlayerRouter";
 
 export class App {
   @provide public config: Config;
@@ -11,6 +12,7 @@ export class App {
   @provide public db: Db;
   @provide public server: Server;
   @provide public intersectionRouter: IntersectionRouter;
+  @provide public playerRouter: PlayerRouter;
 
   public async start() {
     try {
@@ -30,6 +32,7 @@ export class App {
   private async init() {
     await this.db.init();
     this.intersectionRouter.init();
+    this.playerRouter.init();
   }
 
   private run() {

@@ -14,19 +14,42 @@ export class IntersectionRouter {
 
   @bind
   public async multiplayer(context: RouteContext) {
-    const players = context.getQueryParam("players").json().required().array(1).value;
+    const steamids = context.getQueryParam("steamids")
+      .required()
+      .json()
+      .array(1)
+      .format(/[0-9]+/)
+      .value;
 
-    const games = {} as any;
-    for (const player of players) {
-      games[player] = await this.steamApi.getOwnedGamesByVanityUrl(player);
-    }
+    const responses = await Promise.all(steamids.map(
+      (steamid: string, index: number) => this.steamApi.getOwnedGames(steamid, { info: index === 0 })
+    ));
 
-    const multiplayers = await this.steamSpyApi.getMultiplayerGames();
+    const collection = {} as any;
+    const intersectionCounter = {} as any;
+    const intersection = [] as any[];
+    const participants = steamids.length;
+
+    responses.forEach(({ games }: any, index: number) => {
+      if (index === 0) {
+        for (const game of games) {
+          collection[game.appid] = game;
+        }
+      } else {
+        for (const { appid } of games) {
+          if (collection[appid]) {
+            const count = intersectionCounter[appid] = (intersectionCounter[appid] || 0) + 1;
+            if (count === participants - 1) {
+              intersection.push(collection[appid]);
+            }
+          }
+        }
+      }
+    });
 
     return {
-      games,
-      players,
-      multiplayers
+      games: intersection,
+      steamids
     };
   }
 
