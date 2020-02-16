@@ -69,4 +69,18 @@ export class Param {
     }
     return this;
   }
+
+  public sort() {
+    if (Array.isArray(this.value)) {
+      this.value.sort();
+    }
+    return this;
+  }
+
+  public nonduplicate() {
+    if (Array.isArray(this.value)) {
+      this.value = [...new Set(this.value)];
+    }
+    return this;
+  }
 }

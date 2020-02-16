@@ -35,6 +35,3 @@ package-lock.json
 
 # production
 /release
-
-# temporaty
-client-web

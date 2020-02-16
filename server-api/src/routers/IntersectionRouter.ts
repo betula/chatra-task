@@ -19,6 +19,8 @@ export class IntersectionRouter {
       .json()
       .array(1)
       .format(/[0-9]+/)
+      .sort()
+      .nonduplicate()
       .value;
 
     const [ intersection, multiplayers ] = await Promise.all([

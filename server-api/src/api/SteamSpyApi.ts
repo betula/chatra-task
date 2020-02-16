@@ -9,21 +9,27 @@ const MultiplayerTag = "multiplayer";
 export class SteamSpyApi {
   @provide logger: Logger;
 
+  private logPrefix = chalk`{cyan [steamspy]}`;
   private url = "http://steamspy.com/api.php";
 
   private cacheGamesByTag = cache.hour(2);
 
   private logCall(...values: any[]) {
-    return this.logger.time(chalk`{cyan [steamspy]}`, ...values);
+    return this.logger.time(this.logPrefix, ...values);
+  }
+
+  private log(...values: any[]) {
+    this.logger.log(this.logPrefix, ...values);
   }
 
   public async autoWarmCache() {
+    this.log("cache auto warm start");
     for (;;) {
       this.cacheGamesByTag.reset(MultiplayerTag);
       try {
         await this.getMultiplayerGames();
       } catch(e) {
-        this.logger.log("SteamSpyApi cache warm error", e);
+        this.log("cache warm error", e);
       }
       await delay(Hour);
     }

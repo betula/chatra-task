@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "server-api": "npm run dev --prefix server-api",
-    "client-web": "npm run dev --prefix client-web",
-    "dev": "npx concurrently -k --names \"API,WEB\" -c \"white.bold,magenta.bold\" \"npm run server-api\" \"npm run client-web\"",
+    "dev:server-api": "npm run dev --prefix server-api",
+    "dev:client-web": "npm run dev --prefix client-web",
+    "dev": "npx concurrently -k --names \"API,WEB\" -c \"white.bold,magenta.bold\" \"npm run dev:server-api\" \"npm run dev:client-web\"",
     "lerna:update": "npx lerna bootstrap",
+    "lerna:clean": "npx lerna run clean && npx lerna clean",
+    "lerna:lint": "npx lerna run lint",
+    "lerna:build": "npx lerna run build",
     "start": "npm run lerna:update && npm run dev"
   },
   "devDependencies": {

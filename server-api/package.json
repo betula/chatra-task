@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "npx nodemon",
     "lint": "npx eslint ./src --ext ts",
-    "clean": "npx rimraf ./release"
+    "clean": "npx rimraf ./release",
+    "build": "npx tsc"
+  },
+  "engines": {
+    "node": ">=8"
   },
   "dependencies": {
     "node-provide": "^1.0.0",
