@@ -2,6 +2,7 @@
 import qs from "querystring";
 import chalk from "chalk";
 import { provide, fetch } from "~/lib/core";
+import { cache } from "~/lib/cache";
 import { Config } from "~/services/Config";
 import { Logger } from "~/services/Logger";
 
@@ -11,6 +12,8 @@ export class SteamApi {
 
   private key: string;
   private url = "http://api.steampowered.com";
+  private cacheVanityUrl = cache.hour();
+  private cacheOwnedGames = cache.minute(5);
 
   constructor() {
     this.key = this.config.steam.key;
@@ -28,8 +31,10 @@ export class SteamApi {
     });
     const cmd = "/ISteamUser/ResolveVanityURL/v0001/";
     const logFinish = this.logCall(cmd, vanityurl);
-    const response = await fetch(`${this.url}${cmd}?${query}`);
-    const data = (await response.json()).response;
+    const data = await this.cacheVanityUrl(vanityurl, async () => {
+      const response = await fetch(`${this.url}${cmd}?${query}`);
+      return (await response.json()).response;
+    });
     logFinish();
     return {
       ok: data.success === 1,
@@ -48,8 +53,10 @@ export class SteamApi {
     });
     const cmd = "/IPlayerService/GetOwnedGames/v0001/";
     const logFinish = this.logCall(cmd, steamid, (options?.info ? "with-info" : "no-info"));
-    const response = await fetch(`${this.url}${cmd}?${query}`);
-    const data = (await response.json()).response;
+    const data = await this.cacheOwnedGames(steamid, !!options?.info, async () => {
+      const response = await fetch(`${this.url}${cmd}?${query}`);
+      return (await response.json()).response;
+    });
     logFinish();
     return {
       count: data.game_count,
