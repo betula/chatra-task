@@ -1,8 +1,9 @@
-import { store, action, listen } from "~/lib/core";
+import { store, action, listen, dispatch } from "~/lib/core";
 import { fetchJson } from "~/lib/fetchJson";
 
 export const RemovePlayerItem = action();
 export const TogglePlayerItem = action();
+export const PlayerListChanged = action();
 
 export type PlayerItem = {
   steamid: string;
@@ -11,17 +12,24 @@ export type PlayerItem = {
 }
 
 export class PlayerList {
-  @store list: PlayerItem[] = [];
+  @store store: PlayerItem[] = [];
 
-  public async prefetch() {
-    const list = await fetchJson("/api/players");
-    for (const item of list) {
-      this.append(item);
-    }
+  private set list(list: PlayerItem[]) {
+    if (list === this.store) return;
+    const prev = this.store;
+    this.store = list;
+    dispatch(PlayerListChanged, list, prev);
+  }
+  private get list() {
+    return this.store;
   }
 
-  public append(item: PlayerItem) {
-    this.list = [ ...this.list, item ];
+  public async fetch() {
+    this.list = await fetchJson("/api/players");
+  }
+
+  public append(...items: PlayerItem[]) {
+    this.list = [ ...this.list, ...items ];
   }
 
   @listen(RemovePlayerItem)
@@ -54,6 +62,10 @@ export class PlayerList {
 
   public getList() {
     return this.list;
+  }
+
+  public getEnabledList() {
+    return this.list.filter(({ enabled }) => enabled);
   }
 
   public isEmpty() {

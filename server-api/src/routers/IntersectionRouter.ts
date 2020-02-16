@@ -54,7 +54,12 @@ export class IntersectionRouter {
     responses.forEach(({ games }: any, index: number) => {
       if (index === 0) {
         for (const game of games) {
-          collection[game.appid] = game;
+          collection[game.appid] = {
+            appid: game.appid,
+            name: game.name,
+            icon: game.img_icon_url,
+            logo: game.img_logo_url
+          };
         }
       } else {
         for (const { appid } of games) {
