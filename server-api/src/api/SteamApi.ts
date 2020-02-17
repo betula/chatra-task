@@ -21,7 +21,7 @@ export class SteamApi {
   }
 
   private logCall(...values: any[]) {
-    return this.logger.time(chalk`{yellow [steam]}`, ...values);
+    return this.logger.time(chalk.yellow("[steam]"), ...values);
   }
 
   public async getSteamIdByVanityUrl(vanityurl: string) {

@@ -1,7 +1,9 @@
 import qs from "querystring";
 import chalk from "chalk";
+import https from "https";
 import { fetch, provide, delay } from "~/lib/core";
-import { cache, Hour } from "~/lib/cache";
+import { cache } from "~/lib/cache";
+import { Hour, Second } from "~/lib/consts";
 import { Logger } from "~/services/Logger";
 
 const MultiplayerTag = "multiplayer";
@@ -9,10 +11,13 @@ const MultiplayerTag = "multiplayer";
 export class SteamSpyApi {
   @provide logger: Logger;
 
-  private logPrefix = chalk`{cyan [steamspy]}`;
-  private url = "http://steamspy.com/api.php";
+  private url = "https://steamspy.com/api.php";
+  private urlAgent = new https.Agent({ keepAlive: true });
+  private urlTimeout = 10 * Second;
 
   private cacheGamesByTag = cache.hour(2).nonclone();
+
+  private logPrefix = chalk.cyan("[steamspy]");
 
   private logCall(...values: any[]) {
     return this.logger.time(this.logPrefix, ...values);
@@ -42,22 +47,30 @@ export class SteamSpyApi {
       tag
     });
     const logFinish = this.logCall(request, tag);
-    const data = await this.cacheGamesByTag(tag, async () => {
-      const response = await fetch(`${this.url}?${query}`);
-      const data = await response.json();
+    try {
+      const data = await this.cacheGamesByTag(tag, async () => {
+        const response = await fetch(`${this.url}?${query}`, {
+          timeout: this.urlTimeout,
+          agent: this.urlAgent
+        });
+        const data = await response.json();
 
-      const truncated = {} as any;
-      const appids = Object.keys(data);
-      if (appids.length === 0) {
-        throw "Tag not found";
-      }
-      for (const appid of appids) {
-        truncated[appid] = { appid: data.appid };
-      }
-      return truncated;
-    });
-    logFinish();
-    return data;
+        const truncated = {} as any;
+        const appids = Object.keys(data);
+        if (appids.length === 0) {
+          throw "Tag not found";
+        }
+        for (const appid of appids) {
+          truncated[appid] = { appid: data.appid };
+        }
+        return truncated;
+      });
+      logFinish();
+      return data;
+    } catch(e) {
+      logFinish("ERR", e);
+      return null;
+    }
   }
 
   public async getMultiplayerGames() {

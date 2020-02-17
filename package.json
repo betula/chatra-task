@@ -7,7 +7,8 @@
     "dev:client-web": "npm run dev --prefix client-web",
     "dev": "npx concurrently -k --names \"API,WEB\" -c \"white.bold,magenta.bold\" \"npm run dev:server-api\" \"npm run dev:client-web\"",
     "lerna:update": "npx lerna bootstrap",
-    "lerna:clean": "npx lerna run clean && npx lerna clean",
+    "lerna:reset": "npm run lerna:clean && npx lerna clean --yes && npm run lerna:update",
+    "lerna:clean": "npx lerna run clean",
     "lerna:lint": "npx lerna run lint",
     "lerna:build": "npx lerna run build",
     "start": "npm run lerna:update && npm run dev"

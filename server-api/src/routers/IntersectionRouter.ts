@@ -29,10 +29,16 @@ export class IntersectionRouter {
     ]);
 
     const games = [];
-    for (const game of intersection) {
-      if (multiplayers[game.appid]) {
-        games.push(game);
+
+    if (multiplayers) {
+      for (const game of intersection) {
+        if (multiplayers[game.appid]) {
+          games.push(game);
+        }
       }
+    } else {
+      // TODO: API of steamspy is not stable. Necessary to store all games to local db
+      games.push(...intersection);
     }
 
     return {
