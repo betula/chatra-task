@@ -28,14 +28,6 @@ export class IntersectionRouter {
       this.steamSpyApi.getMultiplayerGames()
     ]);
 
-    if (Object.keys(multiplayers).length === 0) {
-      // TODO: If steamspy is fallen down
-      return {
-        games: intersection,
-        steamids
-      }
-    }
-
     const games = [];
     for (const game of intersection) {
       if (multiplayers[game.appid]) {

@@ -9,13 +9,14 @@
     "build": "npx next build"
   },
   "dependencies": {
-    "@impress/dispatcher": "^2.1.0",
-    "@impress/react": "^2.1.0",
+    "@impress/dispatcher": "^2.2.0",
+    "@impress/react": "^2.2.0",
     "isomorphic-unfetch": "^3.0.0",
     "next": "^9.2.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "reflect-metadata": "^0.1.13",
+    "styled-components": "^5.0.1",
     "todomvc-app-css": "^2.3.0"
   },
   "devDependencies": {
@@ -25,6 +26,7 @@
     "@impress/babel-plugin-ssr": "^2.1.0",
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
+    "@types/styled-components": "^4.4.3",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
     "@zeit/next-typescript": "^1.1.1",

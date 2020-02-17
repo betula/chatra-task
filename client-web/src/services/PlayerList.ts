@@ -1,4 +1,4 @@
-import { store, action, listen, dispatch } from "~/lib/core";
+import { store, action, on, dispatch } from "~/lib/core";
 import { fetchJson } from "~/lib/fetchJson";
 
 export const RemovePlayerItem = action();
@@ -16,9 +16,8 @@ export class PlayerList {
 
   private set list(list: PlayerItem[]) {
     if (list === this.store) return;
-    const prev = this.store;
     this.store = list;
-    dispatch(PlayerListChanged, list, prev);
+    dispatch(PlayerListChanged);
   }
   private get list() {
     return this.store;
@@ -32,12 +31,12 @@ export class PlayerList {
     this.list = [ ...this.list, ...items ];
   }
 
-  @listen(RemovePlayerItem)
+  @on(RemovePlayerItem)
   public remove(item: PlayerItem) {
     this.list = this.list.filter((_item) => item !== _item);
   }
 
-  @listen(TogglePlayerItem)
+  @on(TogglePlayerItem)
   public toggle(item: PlayerItem) {
     this.list = this.list.map((_item) => (item === _item)
       ? { ...item, enabled: !item.enabled }

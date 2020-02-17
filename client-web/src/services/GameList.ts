@@ -1,17 +1,18 @@
-import { store, listen, provide } from "~/lib/core";
+import { store, on, provide } from "~/lib/core";
 import { PlayerListChanged, PlayerList } from "./PlayerList";
 import { fetchJson } from "~/lib/fetchJson";
 
 export type GameItem = {
   appid: string;
   name: string;
+  icon: string;
 }
 
 export class GameList {
   @provide playerList: PlayerList;
   @store list: GameItem[] = [];
 
-  @listen(PlayerListChanged)
+  @on(PlayerListChanged)
   public async fetch() {
     const steamids = this.playerList.getEnabledList().map(({ steamid }) => steamid);
     if (steamids.length === 0) {

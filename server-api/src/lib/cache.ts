@@ -13,6 +13,7 @@ function keyFromKeys(keys: any[]): any {
 function create(lifetime: number) {
   let createdAt: any = {};
   let cache: any = {};
+  let nonclone = false;
 
   function fn(fn: () => any): any;
   function fn(...keysAndFnAtLast: any[]): any;
@@ -21,10 +22,13 @@ function create(lifetime: number) {
     const key = keyFromKeys(keysAndFnAtLast.slice(0, -1)) || DefaultCacheKey;
     const now = Date.now();
     if (typeof createdAt[key] === "undefined" || now > createdAt[key] + lifetime) {
-      cache[key] = (fn)();
+      cache[key] = fn();
       createdAt[key] = now;
     }
     const value = cache[key];
+    if (nonclone) {
+      return value;
+    }
     return (value?.then)
       ? value.then((data: any) => clone(data))
       : clone(value);
@@ -40,6 +44,11 @@ function create(lifetime: number) {
       delete cache[key];
     }
   };
+
+  fn.nonclone = () => {
+    nonclone = true;
+    return fn;
+  }
 
   return fn;
 }

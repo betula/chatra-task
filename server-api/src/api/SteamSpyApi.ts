@@ -12,7 +12,7 @@ export class SteamSpyApi {
   private logPrefix = chalk`{cyan [steamspy]}`;
   private url = "http://steamspy.com/api.php";
 
-  private cacheGamesByTag = cache.hour(2);
+  private cacheGamesByTag = cache.hour(2).nonclone();
 
   private logCall(...values: any[]) {
     return this.logger.time(this.logPrefix, ...values);
@@ -47,8 +47,12 @@ export class SteamSpyApi {
       const data = await response.json();
 
       const truncated = {} as any;
-      for (const key of Object.keys(data)) {
-        truncated[key] = { appid: data.appid };
+      const appids = Object.keys(data);
+      if (appids.length === 0) {
+        throw "Tag not found";
+      }
+      for (const appid of appids) {
+        truncated[appid] = { appid: data.appid };
       }
       return truncated;
     });

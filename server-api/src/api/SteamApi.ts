@@ -13,8 +13,8 @@ export class SteamApi {
   private key: string;
   private url = "http://api.steampowered.com";
 
-  private cacheVanityUrl = cache.hour();
-  private cacheOwnedGames = cache.minute(5);
+  private cacheVanityUrl = cache.hour().nonclone();
+  private cacheOwnedGames = cache.minute(5).nonclone();
 
   constructor() {
     this.key = this.config.steam.key;
@@ -63,8 +63,7 @@ export class SteamApi {
       const games = data.games.map((item: any) => ({
         appid: item.appid,
         name: item.name,
-        icon: item.img_icon_url,
-        logo: item.img_logo_url
+        icon: item.img_icon_url
       }));
       return {
         games
