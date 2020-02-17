@@ -1,6 +1,6 @@
 import { store, on, provide } from "~/lib/core";
 import { PlayerListChanged, PlayerList } from "./PlayerList";
-import { fetchJson } from "~/lib/fetchJson";
+import { fetchJson } from "~/lib/fetch";
 
 export type GameItem = {
   appid: string;

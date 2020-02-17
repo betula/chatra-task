@@ -1,5 +1,5 @@
 import { store, action, on, dispatch } from "~/lib/core";
-import { fetchJson } from "~/lib/fetchJson";
+import { fetchJson } from "~/lib/fetch";
 
 export const RemovePlayerItem = action();
 export const TogglePlayerItem = action();
