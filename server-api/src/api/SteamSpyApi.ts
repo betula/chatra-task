@@ -44,7 +44,13 @@ export class SteamSpyApi {
     const logFinish = this.logCall(request, tag);
     const data = await this.cacheGamesByTag(tag, async () => {
       const response = await fetch(`${this.url}?${query}`);
-      return await response.json();
+      const data = await response.json();
+
+      const truncated = {} as any;
+      for (const key of Object.keys(data)) {
+        truncated[key] = { appid: data.appid };
+      }
+      return truncated;
     });
     logFinish();
     return data;

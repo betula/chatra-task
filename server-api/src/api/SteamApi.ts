@@ -56,11 +56,22 @@ export class SteamApi {
     const logFinish = this.logCall(cmd, steamid, (options?.info ? "with-info" : "no-info"));
     const data = await this.cacheOwnedGames(steamid, !!options?.info, async () => {
       const response = await fetch(`${this.url}${cmd}?${query}`);
-      return (await response.json()).response;
+      const data = (await response.json()).response;
+
+      if (!options?.info) return data;
+
+      const games = data.games.map((item: any) => ({
+        appid: item.appid,
+        name: item.name,
+        icon: item.img_icon_url,
+        logo: item.img_logo_url
+      }));
+      return {
+        games
+      }
     });
     logFinish();
     return {
-      count: data.game_count,
       games: data.games
     }
   }
