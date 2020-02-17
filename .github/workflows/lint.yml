@@ -1,4 +1,4 @@
-name: Build
+name: Lint
 on: [push, pull_request]
 jobs:
   run:
@@ -8,8 +8,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [10, 12]
-        os: [ubuntu-latest, windows-latest]
+        node: [12]
+        os: [ubuntu-latest]
 
     steps:
       - name: Clone repository
@@ -28,6 +28,3 @@ jobs:
 
       - name: Run lint
         run: npm run lerna:lint
-
-      - name: Run build
-        run: npm run lerna:build

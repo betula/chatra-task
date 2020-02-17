@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "npx nodemon",
     "lint": "npx eslint ./src --ext ts",
-    "clean": "npx rimraf ./release",
-    "build": "npx tsc"
+    "clean": "npx rimraf ./release"
   },
   "engines": {
     "node": ">=8"

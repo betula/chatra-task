@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next",
     "lint": "npx eslint ./src --ext ts,tsx",
-    "clean": "npx rimraf ./release",
-    "build": "npx next build"
+    "clean": "npx rimraf ./release"
   },
   "dependencies": {
     "@impress/dispatcher": "^2.3.0",
