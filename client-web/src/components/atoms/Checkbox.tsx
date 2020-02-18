@@ -22,13 +22,13 @@ const Checkmark = styled.span`
   left: 0;
   height: 25px;
   width: 25px;
-  background-color: #eee;
+  background-color: rgba(238,242,245,0.2);
 
   ${Container}:hover ${Input} ~ & {
-    background-color: #ccc;
+    background-color: rgb(202,202,202,0.5);
   }
   ${Container} input:checked ~ & {
-    background-color: #2196F3;
+    background-color: rgb(9,71,113);
   }
 
   :after {

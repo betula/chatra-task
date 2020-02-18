@@ -34,4 +34,8 @@ export class GameList {
   isEmpty() {
     return this.list.length === 0;
   }
+
+  getTotal() {
+    return this.list.length;
+  }
 }

@@ -8,7 +8,7 @@ import { LoadingOverlay } from "./atoms/LoadingOverlay";
 
 const Box = styled.div`
   position: relative;
-`;
+`
 const List = styled.ul`
   list-style: none;
   padding: 0;

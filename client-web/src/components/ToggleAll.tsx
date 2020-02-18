@@ -14,13 +14,13 @@ const Box = styled.li`
 `
 
 export const ToggleAll = memo(() => {
-  const list = useProvide(PlayerList);
+  const playerList = useProvide(PlayerList);
 
   return (
     <Box>
       <Checkbox
-        checked={!list.hasDisabled()}
-        onChange={() => list.toggleAll()}
+        checked={!playerList.hasDisabled()}
+        onChange={() => playerList.toggleAll()}
       />
     </Box>
   )

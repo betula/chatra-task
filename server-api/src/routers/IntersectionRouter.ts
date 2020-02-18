@@ -57,6 +57,10 @@ export class IntersectionRouter {
     const intersection = [] as any[];
     const participants = steamids.length;
 
+    if (responses.length === 1) {
+      return responses[0].games;
+    }
+
     responses.forEach(({ games }: any, index: number) => {
       if (index === 0) {
         for (const game of games) {

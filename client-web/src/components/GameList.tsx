@@ -4,10 +4,11 @@ import { styled } from "~/lib/styled";
 import { GameList as GameListService } from "~/services/GameList";
 import { GameItem } from "./GameItem";
 import { LoadingOverlay } from "./atoms/LoadingOverlay";
+import { Total } from "./Total";
 
 const Box = styled.div`
   position: relative;
-`;
+`
 const List = styled.ul`
   list-style: none;
   margin: 0;
@@ -22,6 +23,7 @@ export const GameList = memo(() => {
 
   return (
     <Box>
+      <Total />
       <List>
         {gameList.getList().map((item) => <GameItem item={item} key={item.appid} />)}
       </List>
