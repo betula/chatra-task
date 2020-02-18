@@ -49,7 +49,7 @@ export class Fetcher<Meta = {}> {
     return this;
   }
 
-  public inProgress() {
+  public get inProgress() {
     return this.status === FetcherStatus.Progress;
   }
 

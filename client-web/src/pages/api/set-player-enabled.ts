@@ -5,5 +5,5 @@ export default (req: any, res: any) => {
   const steamid = JSON.parse(req.query.q);
   const enabled = req.body;
   resolve(PlayerList).setPlayerEnabled(steamid, enabled);
-  res.json({});
+  res.json({ steamid, enabled });
 };

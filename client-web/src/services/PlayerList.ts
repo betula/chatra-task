@@ -4,7 +4,7 @@ import { NewPlayerAdded } from "~/entities/NewPlayer";
 import { Fetcher } from "~/entities/Fetcher";
 
 export const RemovePlayerItem = action();
-export const TogglePlayerItem = action();
+export const SetPlayerItemEnabed = action();
 export const PlayerListChanged = action();
 
 export type PlayerItem = {
@@ -44,10 +44,10 @@ export class PlayerList {
     this.list = this.list.filter((_item) => item !== _item);
   }
 
-  @on(TogglePlayerItem)
-  public toggle(item: PlayerItem) {
+  @on(SetPlayerItemEnabed)
+  public setEnabled(item: PlayerItem, enabled: boolean) {
     this.list = this.list.map((_item) => (item === _item)
-      ? { ...item, enabled: !item.enabled }
+      ? { ...item, enabled }
       : _item
     )
   }
