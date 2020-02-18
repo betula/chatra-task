@@ -1,6 +1,7 @@
 import { store, action, on, dispatch, provide } from "~/lib/core";
 import { Api } from "./Api";
 import { NewPlayerAdded } from "~/entities/NewPlayer";
+import { Fetcher } from "~/entities/Fetcher";
 
 export const RemovePlayerItem = action();
 export const TogglePlayerItem = action();
@@ -16,6 +17,10 @@ export class PlayerList {
   @provide api: Api;
   @store store: PlayerItem[] = [];
 
+  private fetcher = new Fetcher()
+    .call(() => this.api.getPlayers())
+    .ok((list) => this.list = list);
+
   private set list(list: PlayerItem[]) {
     if (list === this.store) return;
     this.store = list;
@@ -27,7 +32,7 @@ export class PlayerList {
 
   @on(NewPlayerAdded)
   public async fetch() {
-    this.list = await this.api.getPlayers();
+    await this.fetcher.exec();
   }
 
   public append(...items: PlayerItem[]) {
@@ -68,6 +73,10 @@ export class PlayerList {
 
   public getEnabledList() {
     return this.list.filter(({ enabled }) => enabled);
+  }
+
+  public getEnabledSteamIdList() {
+    return this.getEnabledList().map(({ steamid }) => steamid);
   }
 
   public isEmpty() {

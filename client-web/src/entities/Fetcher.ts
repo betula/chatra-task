@@ -64,19 +64,17 @@ export class Fetcher<Meta = {}> {
         this.result = data
         this.status = FetcherStatus.Ok;
         this.okHandler && this.okHandler(data);
+        this.finishHandler && this.finishHandler(data);
+        return data;
       }
       catch (error) {
         if (isCancelled) return;
         this.result = error
         this.status = FetcherStatus.Fail;
-        if (this.failHandler) {
-          this.failHandler(error);
-        } else {
-          console.error(error);
-        }
+        this.failHandler && this.failHandler(error);
+        this.finishHandler && this.finishHandler(error);
+        throw error;
       }
-      this.finishHandler && this.finishHandler(this.result);
-      return this.result;
     })();
 
     handler.cancel = () => {
@@ -101,7 +99,7 @@ export class Fetcher<Meta = {}> {
   }
 
   public exec() {
-    this.fetch().catch((error: any) => {
+    return this.fetch().catch((error: any) => {
       console.error(error);
     });
   }

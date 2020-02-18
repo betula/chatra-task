@@ -1,6 +1,7 @@
 import { store, on, provide } from "~/lib/core";
 import { PlayerListChanged, PlayerList } from "./PlayerList";
 import { Api } from "./Api";
+import { Fetcher } from "~/entities/Fetcher";
 
 export type GameItem = {
   appid: string;
@@ -13,10 +14,13 @@ export class GameList {
   @provide api: Api;
   @store list: GameItem[] = [];
 
+  private fetcher = new Fetcher()
+    .call(() => this.api.getGamesBySteamIds(this.playerList.getEnabledSteamIdList()))
+    .ok((list) => this.list = list);
+
   @on(PlayerListChanged)
   public async fetch() {
-    const steamids = this.playerList.getEnabledList().map(({ steamid }) => steamid);
-    this.list = await this.api.getGamesBySteamIds(steamids);
+    await this.fetcher.exec();
   }
 
   getList() {

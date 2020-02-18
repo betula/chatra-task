@@ -42,7 +42,7 @@ export class NewPlayer {
 
     const url = this.url.trim();
     if (url) {
-      this.sender.fetch();
+      this.sender.exec();
     }
   }
 
