@@ -58,13 +58,15 @@ export class SteamApi {
       const response = await fetch(`${this.url}${cmd}?${query}`);
       const data = (await response.json()).response;
 
-      if (!options?.info) return data;
+      let games = data.games || [];
+      if (options?.info) {
+        games = games.map((item: any) => ({
+          appid: item.appid,
+          name: item.name,
+          icon: item.img_icon_url
+        }));
+      }
 
-      const games = data.games.map((item: any) => ({
-        appid: item.appid,
-        name: item.name,
-        icon: item.img_icon_url
-      }));
       return {
         games
       }

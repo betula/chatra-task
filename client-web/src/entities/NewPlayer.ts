@@ -5,45 +5,48 @@ import { Api } from "~/services/Api";
 export const NewPlayerAdded = action();
 
 export class NewPlayer {
-  @provide api: Api;
+  @provide private api: Api;
+  @store private _url = "";
+  @subscribe private sender = new Fetcher();
 
-  @store url = "";
-  @store progress = false;
+  @store public error: any = null;
 
-  @subscribe sender = new Fetcher<{ url: string }>();
-
-  private senderCallHandler = async () => {
-    this.sender.meta.url = this.url;
-    return await this.api.addPlayer(this.url);
+  public get url() {
+    return this._url;
   }
+  public set url(url: string) {
+    this._url = url;
+    this.error = null;
+  }
+
+  private senderCallHandler = () => this.api.addPlayer(this.url);
 
   private senderOkHandler = (data: any) => {
-    console.log("OKOK", data);
-    dispatch(NewPlayerAdded);
-  };
-  private senderFailHandler = (error: any) => {
-    console.error("Could not add player", error);
-  };
-  private senderFinishHandler = () => {
+    if (data.error) {
+      this.error = data.error;
+      return;
+    }
     this.url = "";
-  }
-  private senderShouldFetchHandler = () => {
-    return this.sender.meta.url !== this.url;
+    dispatch(NewPlayerAdded);
   };
 
   constructor() {
     this.sender
       .call(this.senderCallHandler)
-      .shouldFetch(this.senderShouldFetchHandler)
-      .ok(this.senderOkHandler)
-      .fail(this.senderFailHandler)
-      .finish(this.senderFinishHandler);
+      .ok(this.senderOkHandler);
   }
 
   public send() {
+    if (this.pending) return;
+    if (this.error) return;
+
     const url = this.url.trim();
     if (url) {
       this.sender.fetch();
     }
+  }
+
+  public get pending() {
+    return this.sender.inProgress();
   }
 }

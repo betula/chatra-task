@@ -2,14 +2,16 @@ import { ParamError } from "./ParamError";
 
 export class Param {
   public value: any;
-  public errors = [] as string[];
+  public errorCode?: string;
+  public hasError = false;
 
   constructor(value: any) {
     this.value = value;
   }
 
   public error(name: string) {
-    this.errors.push(name);
+    this.errorCode = name;
+    this.hasError = true;
     throw ParamError;
   }
 

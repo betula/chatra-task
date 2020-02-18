@@ -19,6 +19,7 @@ export class NewPlayer extends PureComponent {
   }
 
   public render() {
+    const { entity } = this;
     return (
       <div>
       <input
@@ -27,8 +28,11 @@ export class NewPlayer extends PureComponent {
         autoFocus
         onChange={this.handleInputChange}
         onKeyDown={this.handleInputKeyDown}
-        value={this.entity.url}
+        value={entity.url}
+        disabled={entity.pending}
       />
+      {entity.error ? (<b>{this.entity.error}</b>) : null}
+      {entity.pending ? (<i>Loading</i>) : null}
       </div>
     )
   }

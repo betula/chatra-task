@@ -35,4 +35,13 @@ export class Api {
   async addPlayer(url: string) {
     return await this.callPost("add-player", url);
   }
+
+  async setPlayerEnabled(steamid: string, enabled: boolean) {
+    return await this.callPost("set-player-enabled", enabled, steamid);
+  }
+
+  async removePlayer(steamid: string) {
+    return await this.callPost("remove-player", null, steamid);
+  }
+
 }

@@ -1,5 +1,4 @@
 import { store } from "~/lib/core";
-import { fetch } from "~/lib/fetch";
 
 export enum FetcherStatus {
   Progress,
@@ -23,6 +22,7 @@ export class Fetcher<Meta = {}> {
   private failHandler?: ResultHandler;
   private finishHandler?: ResultHandler;
   private result?: any;
+  private thread?: any;
 
   public call(callHandler: CallHandler) {
     this.callHandler = callHandler;
@@ -53,7 +53,39 @@ export class Fetcher<Meta = {}> {
     return this.status === FetcherStatus.Progress;
   }
 
-  public async fetch() {
+  private createThread() {
+    let isCancelled = false;
+
+    const handler: any = (async () => {
+      this.status = FetcherStatus.Progress;
+      try {
+        const data = await (this.callHandler && this.callHandler());
+        if (isCancelled) return;
+        this.result = data
+        this.status = FetcherStatus.Ok;
+        this.okHandler && this.okHandler(data);
+      }
+      catch (error) {
+        if (isCancelled) return;
+        this.result = error
+        this.status = FetcherStatus.Fail;
+        if (this.failHandler) {
+          this.failHandler(error);
+        } else {
+          console.error(error);
+        }
+      }
+      this.finishHandler && this.finishHandler(this.result);
+      return this.result;
+    })();
+
+    handler.cancel = () => {
+      isCancelled = true;
+    }
+    return handler;
+  }
+
+  public fetch() {
     if (this.shouldFetchHandler) {
       let needStop = false;
       needStop = (this.shouldFetchHandler(() => needStop = true) === false) || needStop;
@@ -62,27 +94,14 @@ export class Fetcher<Meta = {}> {
       }
     }
 
-    this.status = FetcherStatus.Progress;
-    try {
-      const data = await (this.callHandler && this.callHandler());
-      this.status = FetcherStatus.Ok;
-      this.okHandler && this.okHandler(data);
-      this.finishHandler && this.finishHandler(data);
-      return this.result = data;
-    } catch (error) {
-      this.status = FetcherStatus.Fail;
-      if (this.failHandler) {
-        this.failHandler(error);
-      } else {
-        console.error(error);
-      }
-      this.finishHandler && this.finishHandler(error);
-      return this.result = error;
+    if (this.thread) {
+      this.thread.cancel();
     }
+    return this.thread = this.createThread();
   }
 
   public exec() {
-    this.fetch().catch((error) => {
+    this.fetch().catch((error: any) => {
       console.error(error);
     });
   }

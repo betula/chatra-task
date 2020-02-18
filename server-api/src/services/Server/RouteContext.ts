@@ -24,8 +24,8 @@ export class RouteContext {
   public getQueryParamErrors() {
     const errors = {} as any;
     for (const [name, validator] of this.queryParams) {
-      if (validator.errors.length > 0) {
-        errors[name] = validator.errors.slice();
+      if (validator.hasError) {
+        errors[name] = validator.errorCode;
       }
     }
     return errors;
