@@ -7,28 +7,29 @@ import { Api } from "~/services/Api";
 export class PlayerItem extends PureComponent<{ item: PlayerItemType }> {
   @provide api: Api;
 
-  @subscribe remover = new Fetcher()
-    .call(() => {
-      console.log("REMOVE", this.props.item.steamid);
-      return this.api.removePlayer(this.props.item.steamid)
-    })
-    .ok(() => dispatch(RemovePlayerItem, this.props.item));
+  private remover: Fetcher;
+  private toggler: Fetcher;
 
-  @subscribe toggler = new Fetcher()
-    .call(() => {
-      console.log("TOGGLE", this.props.item.steamid);
-      return this.api.setPlayerEnabled(this.props.item.steamid, !this.props.item.enabled);
-    })
-    .ok(({ enabled }) => dispatch(SetPlayerItemEnabed, this.props.item, enabled));
+  constructor(props: any) {
+    super(props);
+
+    this.remover = new Fetcher()
+      .call(() => this.api.removePlayer(this.props.item.steamid))
+      .ok(() => dispatch(RemovePlayerItem, this.props.item));
+    subscribe(this, this.remover);
+
+    this.toggler = new Fetcher()
+      .call(() => this.api.setPlayerEnabled(this.props.item.steamid, !this.props.item.enabled))
+      .ok(({ enabled }) => dispatch(SetPlayerItemEnabed, this.props.item, enabled));
+    subscribe(this, this.toggler);
+  }
 
   private handleDestroyClick = () => {
-    console.log("CLICK DESTROY", this.props.item.steamid);
     if (this.remover.inProgress) return;
     this.remover.exec();
   }
 
   private handleToggleClick = () => {
-    console.log("CLICK TOGGLE", this.props.item.steamid);
     if (this.toggler.inProgress) return;
     this.toggler.exec();
   }

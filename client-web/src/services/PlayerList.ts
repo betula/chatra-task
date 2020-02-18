@@ -1,4 +1,4 @@
-import { store, action, on, dispatch, provide } from "~/lib/core";
+import { store, action, on, dispatch, provide, subscribe } from "~/lib/core";
 import { Api } from "./Api";
 import { NewPlayerAdded } from "~/entities/NewPlayer";
 import { Fetcher } from "~/entities/Fetcher";
@@ -17,9 +17,13 @@ export class PlayerList {
   @provide api: Api;
   @store store: PlayerItem[] = [];
 
-  private fetcher = new Fetcher()
+  public fetcher = new Fetcher()
     .call(() => this.api.getPlayers())
     .ok((list) => this.list = list);
+
+  constructor() {
+    subscribe(this, this.fetcher);
+  }
 
   private set list(list: PlayerItem[]) {
     if (list === this.store) return;

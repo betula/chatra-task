@@ -5,16 +5,17 @@ import { GameItem } from "./GameItem";
 import { ToggleAllButton } from "./ToggleAllButton";
 
 export const GameList = memo(() => {
-  const list = useProvide(GameListService);
-  if (list.isEmpty()) {
+  const gameList = useProvide(GameListService);
+  if (gameList.isEmpty()) {
     return null;
   }
 
   return (
     <section>
       <ToggleAllButton />
+      {gameList.fetcher.inProgress ? <i>Loading</i> : null}
       <ul>
-        {list.getList().map((item) => <GameItem item={item} key={item.appid} />)}
+        {gameList.getList().map((item) => <GameItem item={item} key={item.appid} />)}
       </ul>
     </section>
   )
