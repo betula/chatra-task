@@ -1,8 +1,9 @@
-import "todomvc-app-css/index.css";
 import { serialize, unserialize, zone } from "~/lib/ssr";
 import { resolve } from "~/lib/core";
 import { PlayerList } from "~/services/PlayerList";
 import { GameList } from "~/services/GameList";
+
+import "normalize.css";
 
 const SerializedDataKey = "__SERIALIZED_DATA__";
 

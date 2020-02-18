@@ -1,23 +1,42 @@
 import { memo } from "react";
 import Head from "next/head";
 import { PlayerList } from "./PlayerList";
-import { Header } from "./Header";
 import { GameList } from "./GameList";
+import { NewPlayer } from "./NewPlayer";
+import { styled } from "~/lib/styled";
+
+const Row = styled.div`
+  display: flex;
+  background-color: rgb(30,30,30);
+  color: rgb(188,188,188);
+`
+const Left = styled.div`
+  background-color: rgb(37,37,38);
+  height: 100vh;
+  width: 30vw;
+  overflow-y: auto;
+`
+const Right = styled.div`
+  height: 100vh;
+  width: 70vw;
+  overflow-y: auto;
+`
 
 export const App = memo(() => {
   return (
     <>
       <Head>
-        <title>Let's together</title>
+        <title>Let's play together</title>
       </Head>
-      <section className="todoapp">
-        <Header />
-        <PlayerList />
-      </section>
-      <GameList />
-      <footer className="info">
-        <p>Developed by <a href="https://github.com/betula" target="_blank">Viacheslav Bereza</a></p>
-      </footer>
+      <Row>
+        <Left>
+          <PlayerList />
+          <NewPlayer />
+        </Left>
+        <Right>
+          <GameList />
+        </Right>
+      </Row>
     </>
   );
 });
