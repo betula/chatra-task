@@ -2,7 +2,6 @@ import { memo } from "react";
 import Head from "next/head";
 import { PlayerList } from "./PlayerList";
 import { GameList } from "./GameList";
-import { NewPlayer } from "./NewPlayer";
 import { styled } from "~/lib/styled";
 
 const Row = styled.div`
@@ -14,12 +13,10 @@ const Left = styled.div`
   background-color: rgb(37,37,38);
   height: 100vh;
   width: 30vw;
-  overflow-y: auto;
 `
 const Right = styled.div`
   height: 100vh;
   width: 70vw;
-  overflow-y: auto;
 `
 
 export const App = memo(() => {
@@ -31,7 +28,6 @@ export const App = memo(() => {
       <Row>
         <Left>
           <PlayerList />
-          <NewPlayer />
         </Left>
         <Right>
           <GameList />

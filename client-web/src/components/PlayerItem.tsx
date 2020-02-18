@@ -13,6 +13,7 @@ const Li = styled.li`
   height: 32px;
   position: relative;
   padding-left: 7px;
+  flex-wrap: nowrap;
 
   :hover {
     background-color: rgb(42,45,46);
@@ -44,6 +45,9 @@ const Label = styled.label`
   :hover {
     color: rgb(225,191,140);
   }
+`
+const CheckboxBox = styled.div`
+  width: 25px;
 `
 const A = styled.a`
   color: inherit;
@@ -98,11 +102,13 @@ export class PlayerItem extends PureComponent<{ item: PlayerItemType }> {
 
     return (
       <Li>
-        <Checkbox
-          checked={item.enabled}
-          onChange={this.handleToggleClick}
-          disabled={this.penging}
-        />
+        <CheckboxBox>
+          <Checkbox
+            checked={item.enabled}
+            onChange={this.handleToggleClick}
+            disabled={this.penging}
+          />
+        </CheckboxBox>
         <Label>
           <Link item={item}>{item.url}</Link>
         </Label>

@@ -4,16 +4,24 @@ import { styled } from "~/lib/styled";
 import { PlayerList as PlayerListService } from "~/services/PlayerList";
 import { PlayerItem } from "./PlayerItem";
 import { ToggleAll } from "./ToggleAll";
+import { NewPlayer } from "./NewPlayer";
 import { LoadingOverlay } from "./atoms/LoadingOverlay";
 
 const Box = styled.div`
   position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 `
 const List = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
 `
+const Top = styled.div``;
+const Bottom = styled.div`
+  overflow-y: auto;
+`;
 
 export const PlayerList = memo(() => {
   const playerList = useProvide(PlayerListService);
@@ -23,10 +31,15 @@ export const PlayerList = memo(() => {
 
   return (
     <Box>
-      <ToggleAll />
-      <List>
-        {playerList.getList().map((item) => <PlayerItem item={item} key={item.steamid} />)}
-      </List>
+      <Top>
+        <ToggleAll />
+      </Top>
+      <Bottom>
+        <List>
+          {playerList.getList().map((item) => <PlayerItem item={item} key={item.steamid} />)}
+        </List>
+        <NewPlayer />
+      </Bottom>
       {playerList.fetcher.inProgress ? <LoadingOverlay/> : null}
     </Box>
   )
