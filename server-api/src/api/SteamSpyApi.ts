@@ -13,7 +13,7 @@ export class SteamSpyApi {
 
   private url = "https://steamspy.com/api.php";
   private urlAgent = new https.Agent({ keepAlive: true });
-  private urlTimeout = 10 * Second;
+  private urlTimeout = 20 * Second;
 
   private cacheGamesByTag = cache.hour(2).nonclone();
 

@@ -3,7 +3,6 @@ import { useProvide } from "~/lib/core";
 import { styled } from "~/lib/styled";
 import { PlayerList as PlayerListService } from "~/services/PlayerList";
 import { PlayerItem } from "./PlayerItem";
-import { ToggleAll } from "./ToggleAll";
 import { NewPlayer } from "./NewPlayer";
 import { LoadingOverlay } from "./atoms/LoadingOverlay";
 
@@ -32,13 +31,12 @@ export const PlayerList = memo(() => {
   return (
     <Box>
       <Top>
-        <ToggleAll />
+        <NewPlayer />
       </Top>
       <Bottom>
         <List>
           {playerList.getList().map((item) => <PlayerItem item={item} key={item.steamid} />)}
         </List>
-        <NewPlayer />
       </Bottom>
       {playerList.fetcher.inProgress ? <LoadingOverlay/> : null}
     </Box>

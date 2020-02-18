@@ -60,17 +60,6 @@ export class PlayerList {
     return this.list.some(({ enabled }) => !enabled);
   }
 
-  public toggleAll() {
-    if (this.hasDisabled()) {
-      this.list = this.list.map((item) => (!item.enabled)
-        ? { ...item, enabled: true }
-        : item
-      )
-    } else {
-      this.list = this.list.map((item) => ({ ...item, enabled: false }));
-    }
-  }
-
   public getList() {
     return this.list;
   }
