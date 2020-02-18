@@ -5,12 +5,16 @@
   "scripts": {
     "dev:server-api": "npm run dev --prefix server-api",
     "dev:client-web": "npm run dev --prefix client-web",
-    "dev": "npx concurrently -k --names \"API,WEB\" -c \"white.bold,magenta.bold\" \"npm run dev:server-api\" \"npm run dev:client-web\"",
+    "dev:all": "npx concurrently -k --names \"API,WEB\" -c \"white.bold,magenta.bold\" \"npm run dev:server-api\" \"npm run dev:client-web\"",
+    "start:server-api": "npm run start --prefix server-api",
+    "start:client-web": "npm run start --prefix client-web",
+    "start:all": "npx concurrently -k --names \"API,WEB\" -c \"white.bold,magenta.bold\" \"npm run start:server-api\" \"npm run start:client-web\"",
     "lerna:update": "npx lerna bootstrap",
     "lerna:reset": "npm run lerna:clean && npx lerna clean --yes && npm run lerna:update",
     "lerna:clean": "npx lerna run clean",
     "lerna:lint": "npx lerna run lint",
-    "start": "npm run lerna:update && npm run dev"
+    "dev": "npm run lerna:update && npm run dev:all",
+    "start": "npm run lerna:update && npm run start:all"
   },
   "devDependencies": {
     "concurrently": "^5.1.0",

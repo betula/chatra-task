@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next",
+    "start": "next build && next start",
     "lint": "npx eslint ./src --ext ts,tsx",
     "clean": "npx rimraf ./release"
   },

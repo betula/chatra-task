@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npx nodemon",
+    "start": "npx nodemon",
     "lint": "npx eslint ./src --ext ts",
     "clean": "npx rimraf ./release"
   },
