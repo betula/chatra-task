@@ -38,7 +38,7 @@ export const ErrorOverlay = styled.div<{ text: string }>`
     content: "${(props) => props.text}";
     position: absolute;
     right: -1px;
-    bottom: 100%;
+    top: 100%;
     background: rgb(199,109,99);
     color: rgb(238,242,245);
     padding: 3px 7px;
