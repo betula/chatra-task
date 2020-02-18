@@ -1,37 +1,35 @@
 import { PureComponent } from "react";
-import { store, provide } from "~/lib/core";
+import { provide, subscribe } from "~/lib/core";
 import { EnterKeyCode } from "~/lib/consts";
 import { PlayerList } from "~/services/PlayerList";
+import { NewPlayer as NewPlayerEntity } from "~/entities/NewPlayer";
 
 export class NewPlayer extends PureComponent {
   @provide list: PlayerList;
-  @store url = "";
+  @subscribe entity = new NewPlayerEntity();
 
   private handleInputChange = (event: any) => {
-    this.url = event.target.value;
+    this.entity.url = event.target.value;
   }
 
   private handleInputKeyDown = (event: any) => {
-    if (event.keyCode !== EnterKeyCode) {
-      return;
-    }
-    const url = this.url.trim();
-    if (url) {
-      // this.list.append(url);
-      this.url = "";
+    if (event.keyCode === EnterKeyCode) {
+      this.entity.send();
     }
   }
 
   public render() {
     return (
+      <div>
       <input
         className="new-todo"
         placeholder="Steam profile url"
         autoFocus
         onChange={this.handleInputChange}
         onKeyDown={this.handleInputKeyDown}
-        value={this.url}
+        value={this.entity.url}
       />
+      </div>
     )
   }
 }

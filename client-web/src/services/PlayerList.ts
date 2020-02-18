@@ -1,5 +1,5 @@
-import { store, action, on, dispatch } from "~/lib/core";
-import { fetchJson } from "~/lib/fetch";
+import { store, action, on, dispatch, provide } from "~/lib/core";
+import { Api } from "./Api";
 
 export const RemovePlayerItem = action();
 export const TogglePlayerItem = action();
@@ -12,6 +12,7 @@ export type PlayerItem = {
 }
 
 export class PlayerList {
+  @provide api: Api;
   @store store: PlayerItem[] = [];
 
   private set list(list: PlayerItem[]) {
@@ -24,7 +25,7 @@ export class PlayerList {
   }
 
   public async fetch() {
-    this.list = await fetchJson("/api/players");
+    this.list = await this.api.getPlayers();
   }
 
   public append(...items: PlayerItem[]) {
