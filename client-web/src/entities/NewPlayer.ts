@@ -1,6 +1,8 @@
-import { store, provide, subscribe } from "~/lib/core";
+import { store, provide, subscribe, action, dispatch } from "~/lib/core";
 import { Fetcher } from "./Fetcher";
 import { Api } from "~/services/Api";
+
+export const NewPlayerAdded = action();
 
 export class NewPlayer {
   @provide api: Api;
@@ -17,6 +19,7 @@ export class NewPlayer {
 
   private senderOkHandler = (data: any) => {
     console.log("OKOK", data);
+    dispatch(NewPlayerAdded);
   };
   private senderFailHandler = (error: any) => {
     console.error("Could not add player", error);

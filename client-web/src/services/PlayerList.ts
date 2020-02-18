@@ -1,5 +1,6 @@
 import { store, action, on, dispatch, provide } from "~/lib/core";
 import { Api } from "./Api";
+import { NewPlayerAdded } from "~/entities/NewPlayer";
 
 export const RemovePlayerItem = action();
 export const TogglePlayerItem = action();
@@ -24,6 +25,7 @@ export class PlayerList {
     return this.store;
   }
 
+  @on(NewPlayerAdded)
   public async fetch() {
     this.list = await this.api.getPlayers();
   }
