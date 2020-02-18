@@ -23,7 +23,6 @@ export class NewPlayer extends PureComponent {
     return (
       <div>
       <input
-        className="new-todo"
         placeholder="Steam profile url"
         autoFocus
         onChange={this.handleInputChange}

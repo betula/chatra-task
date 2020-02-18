@@ -1,8 +1,63 @@
 import { PureComponent } from "react";
 import { dispatch, subscribe, provide } from "~/lib/core";
+import { styled } from "~/lib/styled";
 import { PlayerItem as PlayerItemType, RemovePlayerItem, SetPlayerItemEnabed } from "~/services/PlayerList";
 import { Fetcher } from "~/entities/Fetcher";
 import { Api } from "~/services/Api";
+import { LoadingOverlay } from "./atoms/LoadingOverlay";
+import { Checkbox } from "./atoms/Checkbox";
+
+const Li = styled.li`
+  display: flex;
+  align-items: center;
+  height: 32px;
+  position: relative;
+  padding-left: 7px;
+
+  :hover {
+    background-color: rgb(42,45,46);
+  }
+`
+const DeleteButton = styled.button`
+  display: none;
+  position: absolute;
+  right: 7px;
+  top: 0;
+  bottom: 3px;
+  border: 3px;
+  background: transparent;
+  font-size: 22px;
+  color: inherit;
+  :hover {
+    color: rgb(226,192,121);
+    cursor: pointer;
+  }
+  :after {
+    content: "×";
+  }
+  ${Li}:hover & {
+    display: inline;
+  }
+`
+const Label = styled.label`
+  padding-left: 5px;
+  :hover {
+    color: rgb(225,191,140);
+  }
+`
+const A = styled.a`
+  color: inherit;
+  text-decoration: none;
+`
+
+const Link = ({ item, children }: { item: PlayerItemType; children: any }) => {
+  const [,,,,id] = /^((https?:\/\/)?(www\.)?steamcommunity\.com\/id\/)?([^/]{1,})$/i.exec(item.url) || [];
+  return (
+    <A href={`https://steamcommunity.com/id/${id}`} target="_blank">
+      {children}
+    </A>
+  )
+}
 
 export class PlayerItem extends PureComponent<{ item: PlayerItemType }> {
   @provide api: Api;
@@ -34,10 +89,6 @@ export class PlayerItem extends PureComponent<{ item: PlayerItemType }> {
     this.toggler.exec();
   }
 
-  private getLiClassName() {
-    if (!this.props.item.enabled) return "completed";
-  }
-
   private get penging() {
     return this.remover.inProgress || this.toggler.inProgress;
   }
@@ -46,20 +97,18 @@ export class PlayerItem extends PureComponent<{ item: PlayerItemType }> {
     const { item } = this.props;
 
     return (
-      <li className={this.getLiClassName()}>
-        <div className="view">
-          <input
-            className="toggle"
-            type="checkbox"
-            checked={item.enabled}
-            onChange={this.handleToggleClick}
-            disabled={this.penging}
-          />
-          <label>{item.url}</label>
-          <button className="destroy" onClick={this.handleDestroyClick} />
-        </div>
-        {this.penging ? <b>Loading</b> : null}
-      </li>
+      <Li>
+        <Checkbox
+          checked={item.enabled}
+          onChange={this.handleToggleClick}
+          disabled={this.penging}
+        />
+        <Label>
+          <Link item={item}>{item.url}</Link>
+        </Label>
+        <DeleteButton onClick={this.handleDestroyClick} />
+        {this.penging ? <LoadingOverlay/> : null}
+      </Li>
     )
   }
 }
