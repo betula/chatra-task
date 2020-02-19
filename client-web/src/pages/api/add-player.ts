@@ -6,8 +6,8 @@ export default async (req: any, res: any) => {
   const url = req.body;
 
   const data = await resolve(Api).getPlayerSteamIdByUrl(url);
-  if (data?.errors?.url === "not found") {
-    return res.json({ error: "not found" });
+  if (data?.errors?.url) {
+    return res.json({ error: data?.errors?.url });
   }
 
   const playerList = resolve(PlayerList);
