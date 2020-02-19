@@ -24,6 +24,9 @@ const Input = styled.input`
   :focus {
     background-color: rgba(255,255,255,1);
   }
+  ::placeholder {
+    color: rgb(109,109,109);
+  }
 `
 export const ErrorOverlay = styled.div<{ text: string }>`
   position: absolute;

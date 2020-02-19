@@ -20,6 +20,7 @@ const List = styled.ul`
 const Top = styled.div``;
 const Bottom = styled.div`
   overflow-y: auto;
+  flex-grow: 1;
 `;
 
 export const PlayerList = memo(() => {

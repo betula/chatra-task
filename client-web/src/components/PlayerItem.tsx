@@ -41,6 +41,7 @@ const DeleteButton = styled.button`
   }
 `
 const Label = styled.label`
+  white-space: nowrap;
   padding-left: 5px;
   :hover {
     color: rgb(225,191,140);

@@ -20,6 +20,7 @@ const IconImage = styled.img`
 const Text = styled.div`
   line-height: 32px;
   padding-left: 7px;
+  white-space: nowrap;
   :hover {
     color: rgb(225,191,140);
   }
