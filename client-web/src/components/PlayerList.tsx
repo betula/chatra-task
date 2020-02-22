@@ -23,21 +23,27 @@ const Bottom = styled.div`
   flex-grow: 1;
 `;
 
-export const PlayerList = memo(() => {
+const ListBox = memo(() => {
   const playerList = useProvide(PlayerListService);
   if (playerList.isEmpty()) {
     return null;
   }
+  return (
+    <List>
+      {playerList.getList().map((item) => <PlayerItem item={item} key={item.steamid} />)}
+    </List>
+  )
+});
 
+export const PlayerList = memo(() => {
+  const playerList = useProvide(PlayerListService);
   return (
     <Box>
       <Top>
         <NewPlayer />
       </Top>
       <Bottom>
-        <List>
-          {playerList.getList().map((item) => <PlayerItem item={item} key={item.steamid} />)}
-        </List>
+        <ListBox />
       </Bottom>
       {playerList.fetcher.inProgress ? <LoadingOverlay/> : null}
     </Box>

@@ -1,5 +1,6 @@
 {
-  "name": "@charta-task/root",
+  "name": "@nextjs-impress-example/root",
+  "description": "Nextjs impress example",
   "version": "0.0.0",
   "private": true,
   "scripts": {

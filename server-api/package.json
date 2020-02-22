@@ -1,5 +1,5 @@
 {
-  "name": "@chatra-task/server-api",
+  "name": "@nextjs-impress-example/server-api",
   "version": "0.0.0",
   "private": true,
   "scripts": {

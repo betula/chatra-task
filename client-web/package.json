@@ -1,5 +1,5 @@
 {
-  "name": "@charta-task/client-web",
+  "name": "@nextjs-impress-example/client-web",
   "version": "0.0.0",
   "private": true,
   "scripts": {
