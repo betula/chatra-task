@@ -17,13 +17,10 @@ export class PlayerList {
   @provide api: Api;
   @store store: PlayerItem[] = [];
 
+  @subscribe
   public fetcher = new Fetcher()
     .call(() => this.api.getPlayers())
     .ok((list) => this.list = list);
-
-  constructor() {
-    subscribe(this, this.fetcher);
-  }
 
   private set list(list: PlayerItem[]) {
     if (list === this.store) return;

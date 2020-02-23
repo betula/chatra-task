@@ -14,13 +14,10 @@ export class GameList {
   @provide api: Api;
   @store list: GameItem[] = [];
 
+  @subscribe
   public fetcher = new Fetcher()
     .call(() => this.api.getGamesBySteamIds(this.playerList.getEnabledSteamIdList()))
     .ok((list) => this.list = list);
-
-  constructor() {
-    subscribe(this, this.fetcher);
-  }
 
   @on(PlayerListChanged)
   public async fetch() {

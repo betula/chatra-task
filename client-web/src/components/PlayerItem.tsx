@@ -67,22 +67,13 @@ const Link = ({ item, children }: { item: PlayerItemType; children: any }) => {
 export class PlayerItem extends PureComponent<{ item: PlayerItemType }> {
   @provide api: Api;
 
-  private remover: Fetcher;
-  private toggler: Fetcher;
+  @subscribe remover = new Fetcher()
+    .call(() => this.api.removePlayer(this.props.item.steamid))
+    .ok(() => dispatch(RemovePlayerItem, this.props.item));
 
-  constructor(props: any) {
-    super(props);
-
-    this.remover = new Fetcher()
-      .call(() => this.api.removePlayer(this.props.item.steamid))
-      .ok(() => dispatch(RemovePlayerItem, this.props.item));
-    subscribe(this, this.remover);
-
-    this.toggler = new Fetcher()
-      .call(() => this.api.setPlayerEnabled(this.props.item.steamid, !this.props.item.enabled))
-      .ok(({ enabled }) => dispatch(SetPlayerItemEnabed, this.props.item, enabled));
-    subscribe(this, this.toggler);
-  }
+  @subscribe toggler = new Fetcher()
+    .call(() => this.api.setPlayerEnabled(this.props.item.steamid, !this.props.item.enabled))
+    .ok(({ enabled }) => dispatch(SetPlayerItemEnabed, this.props.item, enabled));
 
   private handleDestroyClick = () => {
     if (this.remover.inProgress) return;
