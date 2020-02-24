@@ -2,30 +2,26 @@ import { store, action, on, dispatch, provide, subscribe } from "~/lib/core";
 import { Api } from "./Api";
 import { NewPlayerAdded } from "~/entities/NewPlayer";
 import { Fetcher } from "~/entities/Fetcher";
+import { PlayerItem, PlayerItemData, PlayerItemEnabledChanged } from "./PlayerList/PlayerItem";
 
-export const RemovePlayerItem = action();
-export const SetPlayerItemEnabed = action();
-export const PlayerListChanged = action();
-
-export type PlayerItem = {
-  steamid: string;
-  url: string;
-  enabled: boolean;
-}
+export const EnabledPlayerListChanged = action();
 
 export class PlayerList {
   @provide api: Api;
   @store store: PlayerItem[] = [];
 
-  @subscribe
-  public fetcher = new Fetcher()
+  @subscribe fetcher = new Fetcher()
     .call(() => this.api.getPlayers())
-    .ok((list) => this.list = list);
+    .ok((items) => this.setListData(items));
+
+  constructor() {
+    on(PlayerItemEnabledChanged, () => dispatch(EnabledPlayerListChanged));
+  }
 
   private set list(list: PlayerItem[]) {
     if (list === this.store) return;
     this.store = list;
-    dispatch(PlayerListChanged);
+    dispatch(EnabledPlayerListChanged);
   }
   private get list() {
     return this.store;
@@ -36,25 +32,12 @@ export class PlayerList {
     await this.fetcher.exec();
   }
 
-  public append(...items: PlayerItem[]) {
-    this.list = [ ...this.list, ...items ];
+  public setListData(items: PlayerItemData[]) {
+    this.list = items.map((i) => new PlayerItem(i));
   }
 
-  @on(RemovePlayerItem)
   public remove(item: PlayerItem) {
-    this.list = this.list.filter((_item) => item !== _item);
-  }
-
-  @on(SetPlayerItemEnabed)
-  public setEnabled(item: PlayerItem, enabled: boolean) {
-    this.list = this.list.map((_item) => (item === _item)
-      ? { ...item, enabled }
-      : _item
-    )
-  }
-
-  public hasDisabled() {
-    return this.list.some(({ enabled }) => !enabled);
+    this.list = this.list.filter((i) => item !== i);
   }
 
   public getList() {

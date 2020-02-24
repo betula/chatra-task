@@ -1,9 +1,7 @@
 import { PureComponent } from "react";
-import { dispatch, subscribe, provide } from "~/lib/core";
+import { subscribe } from "~/lib/core";
 import { styled } from "~/lib/styled";
-import { PlayerItem as PlayerItemType, RemovePlayerItem, SetPlayerItemEnabed } from "~/services/PlayerList";
-import { Fetcher } from "~/entities/Fetcher";
-import { Api } from "~/services/Api";
+import { PlayerItem as PlayerItemEntity } from "~/services/PlayerList/PlayerItem";
 import { LoadingOverlay } from "./atoms/LoadingOverlay";
 import { Checkbox } from "./atoms/Checkbox";
 
@@ -55,7 +53,7 @@ const A = styled.a`
   text-decoration: none;
 `
 
-const Link = ({ item, children }: { item: PlayerItemType; children: any }) => {
+const Link = ({ item, children }: { item: PlayerItemEntity; children: any }) => {
   const [,,,,id] = /^((https?:\/\/)?(www\.)?steamcommunity\.com\/id\/)?([^/]{1,})$/i.exec(item.url) || [];
   return (
     <A href={`https://steamcommunity.com/id/${id}`} target="_blank">
@@ -64,33 +62,21 @@ const Link = ({ item, children }: { item: PlayerItemType; children: any }) => {
   )
 }
 
-export class PlayerItem extends PureComponent<{ item: PlayerItemType }> {
-  @provide api: Api;
-
-  @subscribe remover = new Fetcher()
-    .call(() => this.api.removePlayer(this.props.item.steamid))
-    .ok(() => dispatch(RemovePlayerItem, this.props.item));
-
-  @subscribe toggler = new Fetcher()
-    .call(() => this.api.setPlayerEnabled(this.props.item.steamid, !this.props.item.enabled))
-    .ok(({ enabled }) => dispatch(SetPlayerItemEnabed, this.props.item, enabled));
+@subscribe
+export class PlayerItem extends PureComponent<{ item: PlayerItemEntity }> {
 
   private handleDestroyClick = () => {
-    if (this.remover.inProgress) return;
-    this.remover.exec();
+    this.props.item.sendRemove();
   }
 
   private handleToggleClick = () => {
-    if (this.toggler.inProgress) return;
-    this.toggler.exec();
-  }
-
-  private get penging() {
-    return this.remover.inProgress || this.toggler.inProgress;
+    this.props.item.sendToggle();
   }
 
   public render() {
     const { item } = this.props;
+
+    console.log(item);
 
     return (
       <Li>
@@ -98,14 +84,14 @@ export class PlayerItem extends PureComponent<{ item: PlayerItemType }> {
           <Checkbox
             checked={item.enabled}
             onChange={this.handleToggleClick}
-            disabled={this.penging}
+            disabled={item.pending}
           />
         </CheckboxBox>
         <Label>
           <Link item={item}>{item.url}</Link>
         </Label>
         <DeleteButton onClick={this.handleDestroyClick} />
-        {this.penging ? <LoadingOverlay/> : null}
+        {item.pending ? <LoadingOverlay/> : null}
       </Li>
     )
   }

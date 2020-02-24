@@ -1,5 +1,5 @@
 import { store, on, provide, subscribe } from "~/lib/core";
-import { PlayerListChanged, PlayerList } from "./PlayerList";
+import { EnabledPlayerListChanged, PlayerList } from "./PlayerList";
 import { Api } from "./Api";
 import { Fetcher } from "~/entities/Fetcher";
 
@@ -14,12 +14,11 @@ export class GameList {
   @provide api: Api;
   @store list: GameItem[] = [];
 
-  @subscribe
-  public fetcher = new Fetcher()
+  @subscribe fetcher = new Fetcher()
     .call(() => this.api.getGamesBySteamIds(this.playerList.getEnabledSteamIdList()))
     .ok((list) => this.list = list);
 
-  @on(PlayerListChanged)
+  @on(EnabledPlayerListChanged)
   public async fetch() {
     await this.fetcher.exec();
   }
